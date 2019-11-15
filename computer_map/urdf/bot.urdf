@@ -1,0 +1,203 @@
+<robot name="AGV">
+ <link name="base_link">
+<visual>
+<geometry>
+<box size="0.48 0.48 0.35"/>
+</geometry>
+<material name="green">
+<color rgba="0 255 0 1"/>
+</material>
+<origin xyz="0 0 0.22" rpy="0 0 0" />
+</visual>
+</link>
+<link name="camera_link">
+<visual>
+ <geometry>
+      <box size="0.06 0.28 0.05"/>
+      </geometry>    
+<material name="red">
+          <color rgba="1 0 0 1"/>
+      </material>
+<origin xyz="0 0 0" rpy="0 0 0" />
+ </visual>
+</link>
+<joint name="joint_link_to_cam" type="fixed">  
+<parent link="base_link"/>
+<child link="camera_link"/>
+<origin xyz="0.16 0 0.42" rpy="0 0 0" />
+</joint>
+<link name="ir1">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.015"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual> </link>
+
+
+  <joint name="camera_to_ir1" type="fixed">
+    <parent link="camera_link"/>
+    <child link="ir1"/>
+    <origin xyz="0.03 -0.0875 0" rpy="0 1.5708 0"/>
+  </joint>
+<link name="ir2">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.015"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="camera_to_ir2" type="fixed">
+    <parent link="camera_link"/>
+    <child link="ir2"/>
+    <origin xyz="0.03 0.04 0" rpy="0 1.5708 0"/>
+  </joint>
+<link name="rgb">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.015"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="camera_to_rgb" type="fixed">
+    <parent link="camera_link"/>
+    <child link="rgb"/>
+    <origin xyz="0.03 -0.01 0" rpy="0 1.5708 0"/>
+  </joint>
+
+
+
+
+<link name="rwheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.1"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="base_to_rwheel" type="fixed">
+    <parent link="base_link"/>
+    <child link="rwheel"/>
+    <origin xyz="0.2 -0.27 0.1" rpy="1.5708 0 0"/>
+  </joint>
+
+<link name="rwheel2">
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.1"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="base_to_rwheel2" type="fixed">
+    <parent link="base_link"/>
+    <child link="rwheel2"/>
+    <origin xyz="-0.2 -0.27 0.1" rpy="1.5708 0 0"/>
+  </joint>
+<link name="lwheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.1"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+    
+
+  <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material> </visual> </link>
+  <joint name="base_to_lwheel" type="fixed">
+    <parent link="base_link"/>
+    <child link="lwheel"/>
+    <origin xyz="0.2 0.27 0.1" rpy="1.5708 0 0"/>
+  </joint>
+<link name="lwheel2">
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.1"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material> </visual> </link>
+  <joint name="base_to_lwheel2" type="fixed">
+    <parent link="base_link"/>
+    <child link="lwheel2"/>
+    <origin xyz="-0.2 0.27 0.1" rpy="1.5708 0 0"/>
+  </joint>
+<link name="basel">
+<visual>
+<geometry>
+<box size="0.09 0.09 0.18"/>
+</geometry>
+<material name="yellow">
+<color rgba="1 255 0 255"/>
+</material></visual>
+<origin xyz="0 0 0" rpy="0 0 0" /> </link>
+<joint name="joint_to_basel" type="fixed">  
+<parent link="base_link"/>
+<child link="basel"/>
+<origin xyz="0 0.195 0.41" rpy="0 0 0" /> </joint>
+
+<link name="baser">
+<visual>
+<geometry>
+<box size="0.09 0.09 0.18"/>
+
+</geometry>
+<material name="yellow">
+<color rgba="1 255 0 255"/>
+</material></visual>
+<origin xyz="0 0 0" rpy="0 0 0" /></link>
+<joint name="joint_to_baser" type="fixed">  
+<parent link="base_link"/>
+<child link="baser"/>
+<origin xyz="0 -0.195 0.41" rpy="0 0 0" />
+</joint>
+<link name="rwheelup">
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.1"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual> </link>
+<joint name="baser_to_rwheelup" type="fixed">
+    <parent link="baser"/>
+    <child link="rwheelup"/>
+    <origin xyz="0 -0.075 0" rpy="1.5708 0 0"/>
+  </joint>
+<link name="lwheelup">
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.1"/>
+      </geometry>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual> </link>
+<joint name="basel_to_lwheelup" type="fixed">
+    <parent link="basel"/>
+    <child link="lwheelup"/>
+    <origin xyz="0 0.075 0" rpy="1.5708 0 0"/>
+  </joint> </robot>
