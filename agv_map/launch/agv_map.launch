@@ -1,0 +1,142 @@
+<launch>
+<!--include file from freenect-->
+<include file="$(find freenect_launch)/launch/freenect.launch"/>
+<!--include depthimage to laserscan node-->
+<node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+<!--depthimage to laserscan parameter-->
+<!--param name="output_frame_id" value="/camera_depth_frame"/-->
+<!--param name="min_height" value="-0.2"/-->
+<!--param name="max_height" value="0.2"/-->
+<!--param name="angle_min" value="-0.5"/-->
+<!--param name="angle_max" value="0.5"/-->
+<!--renaming image output into the image_rect from kinect-->
+<remap from="image" to="camera/depth/image_rect" />
+<!--renaming camera info into the camera info from kinect-->
+<remap from="camera_info" to="camera/depth/camera_info"/>
+</node>
+<!--include turtle_teleop_key as controller-->
+<node pkg="turtlesim" type="turtle_teleop_key" name="keyboard">
+</node>
+<!--include rosserial node for 1st arduino-->
+<node pkg="rosserial_python" type="serial_node.py" name="rosserial0" output="screen">
+<!--rosserial parameter port number and baudrate-->
+    	<param name="~port" value="/dev/ttyUSB0" />
+    	<param name="~baud" value="57600" />
+ 	</node>
+<!--include rosserial node for 2nd arduino-->
+<node pkg="rosserial_python" type="serial_node.py" name="rosserial1" output="screen">
+<!--rosserial parameter port number and baudrate-->
+    	<param name="~port" value="/dev/ttyUSB1" />
+    	<param name="~baud" value="57600" />
+ 	</node>
+<!--parameter ticks for speed control-->
+ <rosparam param="ticks_meter">1358.75</rosparam>
+<!--include differential drive node-->
+ <node pkg="differential_drive" type="pid_velocity.py" name="lpid_velocity">
+<!--rename wheel into left wheel for arduino-->
+ <remap from="wheel" to="lwheel"/>
+
+
+<!--rename motor cmd into left motor for arduino-->
+ <remap from="motor_cmd" to="lmotor_cmd"/>
+<!--rename wheel vtarget into left wheel velocity target for arduino-->
+ <remap from="wheel_vtarget" to="lwheel_vtarget"/>
+<!--rename wheel velocity into left wheel velocity for arduino-->
+ <remap from="wheel_vel" to="lwheel_vel"/>
+<!--speed control parameters-->
+         <rosparam param="Kp">875</rosparam>
+         <rosparam param="Ki">83</rosparam>
+         <rosparam param="Kd">10</rosparam>
+         <rosparam param="out_min">-255</rosparam>
+         <rosparam param="out_max">255</rosparam>
+         <rosparam param="rate">10</rosparam>
+     </node>
+    <node pkg="differential_drive" type="pid_velocity.py" name="rpid_velocity">
+<!--rename wheel into right wheel for arduino-->
+         <remap from="wheel" to="rwheel"/>
+<!--rename motor cmd into right motor for arduino-->
+         <remap from="motor_cmd" to="rmotor_cmd"/>
+<!--rename wheel vtarget into right wheel vtarget for arduino-->
+         <remap from="wheel_vtarget" to="rwheel_vtarget"/>
+<!--rename wheel vel into right wheel velocity for arduino-->
+         <remap from="wheel_vel" to="rwheel_vel"/>
+         <rosparam param="Kp">875</rosparam>
+         <rosparam param="Ki">83</rosparam>
+         <rosparam param="Kd">10</rosparam>
+         <rosparam param="out_min">-255</rosparam>
+         <rosparam param="out_max">255</rosparam>
+         <rosparam param="rate">10</rosparam>
+     </node>
+
+<!--include package differential drive twist to run the motor-->
+<node pkg="differential_drive" type="twist_to_motors.py" name="twist_to_motors" output="screen">
+ <rosparam param="base_width">0.48</rosparam>
+ </node>
+<!--openning robot description configuration-->
+<param name="robot_description" textfile="$(find agv_map)/urdf/bot.urdf" />
+<!--running diff tf in differential drive package-->
+ <node pkg="differential_drive" type="diff_tf.py" name="diff_tf">
+     <rosparam param="rate">8.0</rosparam>
+     <rosparam param="base_width">0.48</rosparam>
+ </node>
+<!--include run RVIZ screen-->
+<!--a
+<node pkg="rviz" type="rviz" name="rviz" output="screen"/>
+a-->
+<!--supports file for robot model configuration-->
+<!--a
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+<remap from="robot_description" to="different_robot_description" />
+<remap from="joint_states" to="different_joint_states" />
+a-->
+<!--include robot setup  broadcast and listener-->
+<!--a
+<node pkg="robot_setup_tf" name="tf_broadcast" type="tf_broadcaster"/>
+<node pkg="robot_setup_tf" name="tf_listen" type="tf_listener"/>
+a-->
+<!--include and run slam gmapping for mapping process-->
+<!--a
+<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+a-->
+<!--slam gmapping parameters-->
+      <!--remap from="scan" to="base_scan"/-->
+      <!--param name="odom_frame" value="odom"/-->
+      <!--a
+<param name="map_update_interval" value="5.0"/>
+      <param name="maxUrange" value="6.0"/>
+      <param name="sigma" value="0.05"/>
+      <param name="kernelSize" value="1"/>
+      <param name="lstep" value="0.05"/>
+      <param name="astep" value="0.05"/>
+
+      <param name="iterations" value="5"/>
+      <param name="lsigma" value="0.075"/>
+      <param name="ogain" value="3.0"/>
+      <param name="lskip" value="0"/>
+      <param name="srr" value="0.01"/>
+      <param name="srt" value="0.02"/>
+      <param name="str" value="0.01"/>
+      <param name="stt" value="0.02"/>
+      <param name="linearUpdate" value="0.1"/>
+a-->    
+ <!-- param name="linearUpdate" value="0.5"/-->
+      <!--a
+<param name="angularUpdate" value="0.435"/>
+a-->   
+<!--param name="angularUpdate" value="0.436"/-->
+      <!--a
+      <param name="temporalUpdate" value="-1.0"/>
+      <param name="resampleThreshold" value="0.5"/>
+      <param name="particles" value="80"/>
+      <param name="xmin" value="-50.0"/>
+      <param name="ymin" value="-50.0"/>
+      <param name="xmax" value="50.0"/>
+      <param name="ymax" value="50.0"/>
+      <param name="delta" value="0.05"/>
+      <param name="llsamplerange" value="0.01"/>
+      <param name="llsamplestep" value="0.01"/>
+      <param name="lasamplerange" value="0.005"/>
+      <param name="lasamplestep" value="0.005"/>
+       </node>
+a-->
+</launch>
